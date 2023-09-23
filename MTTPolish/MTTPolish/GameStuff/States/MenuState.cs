@@ -2,33 +2,34 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MTTPolish.GameStuff.States.DerivedStates
+namespace MTTPolish.GameStuff.States
 {
-    internal class PauseState : IState
+    internal class MenuState : IState
     {
-        public PauseState()
+        private Texture2D mainMenuBackground;
+        public MenuState()
         {
 
         }
 
         public void Initialize()
         {
-            //throw new System.NotImplementedException();
+
         }
 
         public void LoadContent(ContentManager content)
         {
-            
+            mainMenuBackground = content.Load<Texture2D>("UI/MainMenuBackground");
         }
 
         public void Update(GameTime gameTime)
         {
-            //throw new System.NotImplementedException();
+
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //GraphicsDeviceManager.GraphicsDevice.Clear(Color.Green);
+            //GraphicsDeviceManager.GraphicsDevice.Clear(Color.Red);
             spriteBatch.Begin();
             //spriteBatch.Draw(mainMenuBackground, new Rectangle(0, 0, GraphicsDeviceManager.PreferredBackBufferWidth, GraphicsDeviceManager.PreferredBackBufferHeight), Color.White);
             spriteBatch.End();

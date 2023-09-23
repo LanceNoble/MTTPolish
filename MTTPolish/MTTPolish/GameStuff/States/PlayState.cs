@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MTTPolish.GameStuff.States.DerivedStates
+namespace MTTPolish.GameStuff.States
 {
     internal class PlayState : IState
     {
@@ -13,12 +13,12 @@ namespace MTTPolish.GameStuff.States.DerivedStates
 
         public void Initialize()
         {
-           // throw new System.NotImplementedException();
+            // throw new System.NotImplementedException();
         }
 
         public void LoadContent(ContentManager content)
         {
-            
+
         }
 
         public void Update(GameTime gameTime)

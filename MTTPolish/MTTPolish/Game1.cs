@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MTTPolish.GameStuff;
-using MTTPolish.GameStuff.States.DerivedStates;
+using MTTPolish.GameStuff.States;
 
 namespace MTTPolish
 {
@@ -32,10 +32,10 @@ namespace MTTPolish
             _graphics.PreferredBackBufferHeight = 720;
             _graphics.ApplyChanges();
 
-            StateManager.Instance.PossibleStates.Add(new MenuState());
-            StateManager.Instance.PossibleStates.Add(new PlayState());
-            StateManager.Instance.PossibleStates.Add(new PauseState());
-            StateManager.Instance.SetCurrentState(GameState.Menu);
+            StateManager.PossibleStates.Add(new MenuState());
+            StateManager.PossibleStates.Add(new PlayState());
+            StateManager.PossibleStates.Add(new PauseState());
+            StateManager.SetCurrentState(GameState.Menu);
 
             base.Initialize();
         }
@@ -45,8 +45,8 @@ namespace MTTPolish
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            for (int i = 0; i < StateManager.Instance.PossibleStates.Count; i++)
-                StateManager.Instance.PossibleStates[i].LoadContent(Content);
+            for (int i = 0; i < StateManager.PossibleStates.Count; i++)
+                StateManager.PossibleStates[i].LoadContent(Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -56,26 +56,38 @@ namespace MTTPolish
 
             /*MouseState ms = Mouse.GetState();
             if (ms.LeftButton.Equals(ButtonState.Pressed)) 
-                StateManager.Instance.SetCurrentState(GameState.Menu);
+                StateManager.SetCurrentState(GameState.Menu);
 
             else if (ms.RightButton.Equals(ButtonState.Pressed))
-                StateManager.Instance.SetCurrentState(GameState.Play);
+                StateManager.SetCurrentState(GameState.Play);
 
             else
-                StateManager.Instance.SetCurrentState(GameState.Pause);*/
+                StateManager.SetCurrentState(GameState.Pause);*/
 
 
             // TODO: Add your update logic here
-            StateManager.Instance.CurrentState.Update(gameTime);
+            StateManager.CurrentState.Update(gameTime);
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
+            /*if (StateManager.CurrentState is MenuState)
+            {
+                GraphicsDevice.Clear(Color.Green);
+            }
+            if (StateManager.CurrentState is PauseState)
+            {
+                GraphicsDevice.Clear(Color.Red);
+            }
+            if (StateManager.CurrentState is PlayState)
+            {
+                GraphicsDevice.Clear(Color.Blue);
+            }*/
             GraphicsDevice.Clear(Color.ForestGreen);
 
             // TODO: Add your drawing code here
-            StateManager.Instance.CurrentState.Draw(_spriteBatch);
+            StateManager.CurrentState.Draw(_spriteBatch);
             base.Draw(gameTime);
         }
     }

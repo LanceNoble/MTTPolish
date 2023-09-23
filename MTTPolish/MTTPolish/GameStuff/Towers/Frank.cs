@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTTPolish.GameStuff.Objects.Towers
+namespace MTTPolish.GameStuff.Towers
 {
-    internal class BaseTower
+    internal class Frank
     {
-        public BaseTower() { }
+        public Frank() { }
     }
 }

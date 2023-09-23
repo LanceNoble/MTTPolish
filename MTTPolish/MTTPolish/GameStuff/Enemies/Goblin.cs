@@ -1,28 +1,22 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MTTPolish.GameStuff.Objects.Enemies
+namespace MTTPolish.GameStuff.Enemies
 {
     internal class Goblin
     {
-        private int x;
-        private int y;
         private int spd;
         private int dmg;
-        private int health;
+        private int hp;
+        private Vector2 pos;
         private Rectangle box;
         private Texture2D tex;
 
-        public Goblin(int x, int y) 
+        public Goblin(int x, int y)
         {
             spd = 5;
             dmg = 5;
-            health = 5;
+            hp = 5;
         }
 
         public void Hurt()
