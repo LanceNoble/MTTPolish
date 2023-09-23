@@ -8,6 +8,21 @@ namespace MTTPolish.GameStuff
 {
     internal class Tile
     {
+        private enum Direction
+        {
+            Left,
+            Right,
+            Up,
+            Down,
+        }
+        private enum Type
+        {
 
+        }
+        Direction direction;
+        public Tile()
+        {
+
+        }
     }
 }
