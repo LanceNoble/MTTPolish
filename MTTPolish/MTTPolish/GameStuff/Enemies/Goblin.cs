@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace MTTPolish.GameStuff.Enemies
 {
@@ -11,6 +12,9 @@ namespace MTTPolish.GameStuff.Enemies
         private Vector2 pos;
         private Rectangle box;
         private Texture2D tex;
+        private Tile currentTile;
+        private Queue<Tile> path;
+        
 
         public Goblin(int x, int y)
         {
@@ -26,7 +30,17 @@ namespace MTTPolish.GameStuff.Enemies
 
         public void Move()
         {
-
+            switch (path.Peek())
+            {
+                // case tile.direction == left
+                // box.X -= spd;
+                // case tile.direction == right
+                // box.X += spd;
+                // case tile.direction == up
+                // box.Y -= spd;
+                // case tile.direction == down
+                // box.X += spd;
+            }
         }
 
         public void Draw(SpriteBatch sb)

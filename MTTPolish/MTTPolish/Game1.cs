@@ -6,6 +6,11 @@ using MTTPolish.GameStuff.States;
 
 namespace MTTPolish
 {
+    /*
+     * Enums must map to increasing consecutive integers starting from 0
+     * because StateManager uses GameState to set the current state
+     * by using it as an index to iterate through its PossibleStates.
+     */
     enum GameState
     {
         Menu,
@@ -17,6 +22,8 @@ namespace MTTPolish
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        private Board _board;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -26,6 +33,7 @@ namespace MTTPolish
 
         protected override void Initialize()
         {
+
             // TODO: Add your initialization logic here
             _graphics.IsFullScreen = false;
             _graphics.PreferredBackBufferWidth = 1280;
@@ -36,6 +44,9 @@ namespace MTTPolish
             StateManager.PossibleStates.Add(new PlayState());
             StateManager.PossibleStates.Add(new PauseState());
             StateManager.SetCurrentState(GameState.Menu);
+
+            
+            _board = new Board();
 
             base.Initialize();
         }
