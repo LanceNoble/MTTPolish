@@ -13,11 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Levels/File.xml
-/importer:XmlImporter
-/processor:PassThroughProcessor
-/build:Levels/File.xml
-
 #begin UI/MainMenuBackground.png
 /importer:TextureImporter
 /processor:TextureProcessor
