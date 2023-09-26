@@ -1,10 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace MTTPolish.GameStuff
 {
-    [Flags]
+    /*[Flags]
     enum TileType
     {
         Left  = 1,
@@ -13,10 +14,18 @@ namespace MTTPolish.GameStuff
         Down  = 8,
         Omni  = 16,
         Grass = 32,
-    }
+    }*/
     internal class Tile
     {
-        private Tile previousTile;
+        private int directionX;
+        private int directionY;
+        private int positionX;
+        private int positionY;
+        private List<(int dirX, int dirY)> possibleDirections;
+
+
+
+        /*private Tile previousTile;
         private int xCoordinate;
         private int yCoordinate;
         private TileType nextPossibleTileTypes;
@@ -41,7 +50,7 @@ namespace MTTPolish.GameStuff
             if ((int)possibility > (int)TileType.Down || !nextPossibleTileTypes.HasFlag(possibility))
                 return;
             nextPossibleTileTypes &= ~possibility;
-        }
+        }*/
 
         /*public enum Direction
         {
