@@ -7,12 +7,16 @@ namespace MTTPolish.GameStuff.States
 {
     internal class PlayState : IState
     {
+        Texture2D pathTexture;
+
         Random randomNumberGenerator;
         Board level;
         public PlayState()
         {
             randomNumberGenerator = new Random();
-            level = new Board(randomNumberGenerator, 30, 30);
+
+            // For now, best to keep the dimensions the same aspect ratio as the window
+            level = new Board(randomNumberGenerator, 18, 32);
         }
 
         public void Initialize()
@@ -23,7 +27,7 @@ namespace MTTPolish.GameStuff.States
 
         public void LoadContent(ContentManager content)
         {
-
+            pathTexture = content.Load<Texture2D>("Tiles/pathTexture");
         }
 
         public void Update(GameTime gameTime)
@@ -35,7 +39,9 @@ namespace MTTPolish.GameStuff.States
         {
             //GraphicsDeviceManager.GraphicsDevice.Clear(Color.Blue);
             spriteBatch.Begin();
-            //spriteBatch.Draw(mainMenuBackground, new Rectangle(0, 0, GraphicsDeviceManager.PreferredBackBufferWidth, GraphicsDeviceManager.PreferredBackBufferHeight), Color.White);
+            for (int i = 0; i < level.Path.Length; i++) 
+                level.Path[i].Draw(spriteBatch, pathTexture);
+
             spriteBatch.End();
         }
     }

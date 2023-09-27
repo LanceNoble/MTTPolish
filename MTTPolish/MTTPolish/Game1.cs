@@ -63,17 +63,6 @@ namespace MTTPolish
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            /*MouseState ms = Mouse.GetState();
-            if (ms.LeftButton.Equals(ButtonState.Pressed)) 
-                StateManager.SetCurrentState(GameState.Menu);
-
-            else if (ms.RightButton.Equals(ButtonState.Pressed))
-                StateManager.SetCurrentState(GameState.Play);
-
-            else
-                StateManager.SetCurrentState(GameState.Pause);*/
-
-
             // TODO: Add your update logic here
             StateManager.CurrentState.Update(gameTime);
             base.Update(gameTime);
@@ -81,18 +70,6 @@ namespace MTTPolish
 
         protected override void Draw(GameTime gameTime)
         {
-            /*if (StateManager.CurrentState is MenuState)
-            {
-                GraphicsDevice.Clear(Color.Green);
-            }
-            if (StateManager.CurrentState is PauseState)
-            {
-                GraphicsDevice.Clear(Color.Red);
-            }
-            if (StateManager.CurrentState is PlayState)
-            {
-                GraphicsDevice.Clear(Color.Blue);
-            }*/
             GraphicsDevice.Clear(Color.ForestGreen);
 
             // TODO: Add your drawing code here

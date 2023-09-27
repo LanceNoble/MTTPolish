@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace MTTPolish.GameStuff
 {
@@ -16,10 +18,20 @@ namespace MTTPolish.GameStuff
         private int x;
         private int y;
 
-        public Tile(int positionX, int positionY)
+        private int width;
+        private int height;
+
+        private Rectangle box;
+
+        public Tile(int x, int y)
         {
-            x = positionX;
-            y = positionY;
+            this.x = x;
+            this.y = y;
+
+            width = 40;
+            height = 40;
+
+            box = new Rectangle(this.y * width, this.x * height, width, height);
         }
 
         public bool Visited { get; set; } = false;
@@ -29,5 +41,10 @@ namespace MTTPolish.GameStuff
 
         public int X { get { return x; } }
         public int Y { get { return y; } }
+         
+        public void Draw(SpriteBatch spriteBatch, Texture2D texture)
+        {
+            spriteBatch.Draw(texture, box, Color.White);
+        }
     }
 }

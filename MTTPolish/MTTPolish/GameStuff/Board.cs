@@ -5,26 +5,30 @@ using System.Diagnostics;
 namespace MTTPolish.GameStuff
 {
     /*
-     * Generates a map with a path that enemies must follow
+     * Generates a map with a path that enemies must follow and keeps track of what is on each and every single tile at all times
      */
     internal class Board
     {
-        private Random randomNumberGenerator;
+        private Random randomNumberGenerator; // Puts the 'random' in random path
 
-        private Tile[,] map;
+        private Tile[,] map; // Board layout showing what is on each and every single tile at all times
+        private Tile[] path; // Path that the enemy will follow
 
+        // Board dimensions
         private int sizeX;
         private int sizeY;
 
-        public Board(Random randomNumberGenerator, int dimensionsX, int dimensionsY)
+        public Board(Random randomNumberGenerator, int sizeX, int sizeY)
         {
             this.randomNumberGenerator = randomNumberGenerator;
 
-            sizeX = dimensionsX;
-            sizeY = dimensionsY;
+            this.sizeX = sizeX;
+            this.sizeY = sizeY;
 
-            map = new Tile[sizeX, sizeY];
+            map = new Tile[this.sizeX, this.sizeY];
         }
+
+        public Tile[] Path { get { return path; } }
 
         /*
          * Generates the path
@@ -36,6 +40,9 @@ namespace MTTPolish.GameStuff
          * 1. More constraints
          * 1. Recall after timer expires
          * 1. BFS
+         * 
+         * To-Do:
+         * 1. Add looping
          */
         public void Generate()
         {
@@ -50,7 +57,7 @@ namespace MTTPolish.GameStuff
             lastTile.PossibleDirections = new List<TileDirection>() { TileDirection.East };
             lastTile.Direction = TileDirection.East;
 
-            while (lastTile.Y != sizeY - 1)
+            while (true) // I put the condition `lastTile.Y + 1 != sizeY` inside the loop, so it gets checked before the potentially program crashing conditional occurs
             {
                 if (lastTile.Visited && lastTile.PossibleDirections.Count == 0)
                 {
@@ -112,6 +119,12 @@ namespace MTTPolish.GameStuff
 
                 lastTile.Direction = lastTile.PossibleDirections[randomNumberGenerator.Next(0, lastTile.PossibleDirections.Count)];
             }
+
+            this.path = new Tile[path.Count];
+
+            // I transferred the Stack data to an array so that any tile on the path can be accessed at anytime 
+            for (int i = this.path.Length - 1; path.Count != 0; i--) // Reverse because Stack is FILO
+                this.path[i] = path.Pop();
         }
 
         public void Print()
