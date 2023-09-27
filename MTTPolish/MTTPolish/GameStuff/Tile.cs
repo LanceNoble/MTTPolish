@@ -9,29 +9,25 @@ namespace MTTPolish.GameStuff
         North = '\u2191',
         East  = '\u2192',
         South = '\u2193',
+        Omni  = '+',
     }
     internal class Tile
     {
-        private int positionX;
-        private int positionY;
+        private int x;
+        private int y;
 
         public Tile(int positionX, int positionY)
         {
-            this.positionX = positionX;
-            this.positionY = positionY;
+            x = positionX;
+            y = positionY;
         }
 
         public bool Visited { get; set; } = false;
 
         public TileDirection Direction { get; set; } = TileDirection.None;
-        public List<TileDirection> PossibleDirections { get; set; } = new List<TileDirection>() { TileDirection.West, TileDirection.North, TileDirection.East, TileDirection.South };
+        public List<TileDirection> PossibleDirections { get; set; }
 
-        public int PositionX { get { return positionX; } }
-        public int PositionY { get { return positionY; } }
-
-        public Tile Left  { get; set; } = null;
-        public Tile Right { get; set; } = null;
-        public Tile Above { get; set; } = null;
-        public Tile Below { get; set; } = null;
+        public int X { get { return x; } }
+        public int Y { get { return y; } }
     }
 }
