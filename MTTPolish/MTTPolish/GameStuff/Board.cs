@@ -11,14 +11,6 @@ namespace MTTPolish.GameStuff
      */
     internal class Board
     {
-        private char[,] map;
-        private Random rndGen = new Random();
-
-        //private const int dimensions = 20;
-
-        private const int dimensionsX = 10;
-        private const int dimensionsY = 30;
-
         private const char grass = '.';
         private const char left  = '\u2190';
         private const char right = '\u2192';
@@ -26,26 +18,173 @@ namespace MTTPolish.GameStuff
         private const char down  = '\u2193';
         //private const char omni = '+'; // omni tiles will determine their direction based on the previous tile in the path
 
+        private Random randomNumberGenerator;
+
+        private char[,] map;
+        private Tile[,] map1;
         private LinkedList<(int x, int y, char dir, List<char> possibles)> path;
 
-        public Board()
-        {
-            map = new char[dimensionsX, dimensionsY];
-            path = new LinkedList<(int x, int y, char dir, List<char> possibles)>();
+        private int dimensionsX;
+        private int dimensionsY;
 
-            Reset();
-            Walk(new((rndGen.Next(1, dimensionsX - 1), 0, right, new List<char>() { right })));
-            Print();
+        private int startX;
+        private int startY;
+
+        private int endX;
+        private int endY;
+
+        public Board(Random randomNumberGenerator, int dimensionsX, int dimensionsY, int startX, int startY, int endX, int endY)
+        {
+            this.randomNumberGenerator = randomNumberGenerator;
+
+            this.dimensionsX = dimensionsX;
+            this.dimensionsY = dimensionsY;
+
+            this.startX = startX;
+            this.startY = startY;
+
+            this.endX = endX;
+            this.endY = endY;
+
+            map = new char[this.dimensionsX, this.dimensionsY];
+            map1 = new Tile[this.dimensionsX, this.dimensionsY];
+            path = new LinkedList<(int x, int y, char dir, List<char> possibles)>();
         }
 
-        private void Reset()
+        /*
+         * Known Issues: The Stack method does prevent the StackOverflowException. However, there are still issues where a higher dimension = a longer time to generate (and I mean unbearably long like basically forever)
+         * The only difference with this solution is that an exception will not be thrown and the program will not crash. Instead, the loop will just keep going and going
+         * Possible solutions: set a timer, simply clear the map and call generate again once this timer runs out to reset generation
+         * Probably don't need the Tile class Left Right Below and Above references
+         * Maybe add even more constraints to prevent long generation times
+         */
+        public void Generate()
+        {
+            for (int x = 0; x < dimensionsX; x++)
+            {
+                for (int y = 0; y < dimensionsY; y++)
+                {
+                    //map[x, y] = grass;
+
+                    Tile tile = new Tile(x, y);
+                    map1[x, y] = tile;
+                    //if (x - 1 != -1)
+                    //    tile.Above = map1[x - 1, y];
+                    //if (x + 1 != dimensionsX)
+                    //    tile.Below = map1[x + 1, y];
+                    //if (y - 1 != -1)
+                    //    tile.Left = map1[x, y - 1];
+                    //if (y + 1 != dimensionsY)
+                    //    tile.Right = map1[x, y + 1];
+                }
+            }
+
+            for (int x = 0; x < dimensionsX; x++)
+            {
+                for (int y = 0; y < dimensionsY; y++)
+                {
+                    //map[x, y] = grass;
+
+                    //Tile tile = new Tile(x, y);
+                    //map1[x, y] = tile;
+                    if (x - 1 != -1)
+                        map1[x, y].Above = map1[x - 1, y];
+                    if (x + 1 != dimensionsX)
+                        map1[x, y].Below = map1[x + 1, y];
+                    if (y - 1 != -1)
+                        map1[x, y].Left = map1[x, y - 1];
+                    if (y + 1 != dimensionsY)
+                        map1[x, y].Right = map1[x, y + 1];
+                }
+            }
+
+            //path.Clear();
+            //Walk(new((randomNumberGenerator.Next(1, dimensionsX - 1), 0, right, new List<char>() { right })));
+
+            Stack<Tile> path1 = new Stack<Tile>();
+            Tile lastTile = map1[randomNumberGenerator.Next(1, dimensionsX - 1), 0];
+            lastTile.PossibleDirections = new List<TileDirection>() { TileDirection.East };
+            lastTile.Direction = TileDirection.East;
+            //lastTile.Visited = true;
+            //path1.Push(lastTile);
+
+            while (lastTile.PositionY != dimensionsY - 1)
+            {
+                //Print();
+                if (lastTile.Visited && lastTile.PossibleDirections.Count == 0)
+                {
+                    lastTile.Direction = TileDirection.None;
+                    lastTile = path1.Pop();
+                    lastTile.PossibleDirections.Remove(lastTile.Direction);
+                   
+                    continue;
+                }
+                else if (lastTile.Visited && lastTile.PossibleDirections.Count > 0)
+                {
+                    path1.Push(lastTile);
+                    lastTile.Direction = lastTile.PossibleDirections[randomNumberGenerator.Next(0, lastTile.PossibleDirections.Count)];
+                }
+
+                if (!lastTile.Visited)
+                {
+                    path1.Push(lastTile);
+                    lastTile.Visited = true;
+                }
+                
+                if (path1.Peek().Direction == TileDirection.East)
+                {
+                    lastTile = path1.Peek().Right;
+                    lastTile.PossibleDirections = new List<TileDirection>() { TileDirection.North, TileDirection.East, TileDirection.South };
+                } 
+                else if (path1.Peek().Direction == TileDirection.West)
+                {
+                    lastTile = path1.Peek().Left;
+                    lastTile.PossibleDirections = new List<TileDirection>() { TileDirection.North, TileDirection.West, TileDirection.South };
+                }  
+                else if (path1.Peek().Direction == TileDirection.South)
+                {
+                    lastTile = path1.Peek().Below;
+                    lastTile.PossibleDirections = new List<TileDirection>() { TileDirection.West, TileDirection.South, TileDirection.East };
+                } 
+                else if (path1.Peek().Direction == TileDirection.North)
+                {
+                    lastTile = path1.Peek().Above;
+                    lastTile.PossibleDirections = new List<TileDirection>() { TileDirection.West, TileDirection.North, TileDirection.East };
+                }
+
+                if (lastTile.Right == null)
+                {
+                    lastTile.Direction = TileDirection.East;
+                    break;
+                }
+
+                if (lastTile.Left == null /*|| lastTile.Right == null*/ || lastTile.Above == null || lastTile.Below == null || 
+                    (lastTile.Left != path1.Peek() && lastTile.Left.Direction != TileDirection.None) || 
+                    (lastTile.Right != path1.Peek() && lastTile.Right.Direction != TileDirection.None) || 
+                    (lastTile.Above != path1.Peek() && lastTile.Above.Direction != TileDirection.None) || 
+                    (lastTile.Below != path1.Peek() && lastTile.Below.Direction != TileDirection.None)) 
+                {
+                    lastTile = path1.Pop();
+                    lastTile.PossibleDirections.Remove(lastTile.Direction);
+                    //lastTile.Direction = TileDirection.None;
+                    continue;
+                }
+
+                lastTile.Direction = lastTile.PossibleDirections[randomNumberGenerator.Next(0, lastTile.PossibleDirections.Count)];
+                //lastTile.Visited = true;
+                //path1.Push(lastTile);
+            }
+        }
+
+        public void Print()
         {
             for (int i = 0; i < dimensionsX; i++)
             {
                 for (int j = 0; j < dimensionsY; j++)
-                    map[i, j] = grass;
+                    Debug.Write((char)map1[i, j].Direction);
+                Debug.Write('\n');
             }
-            path.Clear();
+            Debug.Write('\n');
         }
 
         /*
@@ -58,6 +197,12 @@ namespace MTTPolish.GameStuff
          * 1. try catch every Walk call (even the recursive ones) <-- this is not a very pogramming solution
          * 1. Add more constraints to the path generator
          * 1. Decrease either the x dimension, y dimension, or both
+         * 1. Tree and Stack for Depth First Search
+         * 1. Fishnet graph
+         *      initialize map to be a 2-D array of the Tile class
+         *      every Tile has a List of possible adjacent tiles
+         *      initialize every tile's possible adjacent neighbors in the 2-D array before starting the walk
+         *      next, start the walk and traverse the map and back track via a stack
          */
         private void Walk(LinkedListNode<(int x, int y, char dir, List<char> possibles)> lastTile)
         {
@@ -81,7 +226,7 @@ namespace MTTPolish.GameStuff
             }
             else if (lastTile.List != null && lastTile.Value.possibles.Count > 0)
             {
-                lastTile.ValueRef.dir = lastTile.Value.possibles[rndGen.Next(0, lastTile.Value.possibles.Count)];
+                lastTile.ValueRef.dir = lastTile.Value.possibles[randomNumberGenerator.Next(0, lastTile.Value.possibles.Count)];
                 map[lastTile.Value.x, lastTile.Value.y] = lastTile.Value.dir;
             }
 
@@ -136,21 +281,10 @@ namespace MTTPolish.GameStuff
                 }
             }
 
-            next.dir = next.possibles[rndGen.Next(0, next.possibles.Count)];
+            next.dir = next.possibles[randomNumberGenerator.Next(0, next.possibles.Count)];
 
             Walk(new(next));
             return;
-        }
-
-        private void Print()
-        {
-            for (int i = 0; i < dimensionsX; i++)
-            {
-                for (int j = 0; j < dimensionsY; j++)
-                    Debug.Write(map[i, j]);
-                Debug.Write('\n');
-            }
-            Debug.Write('\n');
         }
     }
 }

@@ -1,88 +1,37 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace MTTPolish.GameStuff
 {
-    /*[Flags]
-    enum TileType
+    enum TileDirection
     {
-        Left  = 1,
-        Right = 2,
-        Up    = 4,
-        Down  = 8,
-        Omni  = 16,
-        Grass = 32,
-    }*/
+        None  = '.',
+        West  = '\u2190',
+        North = '\u2191',
+        East  = '\u2192',
+        South = '\u2193',
+    }
     internal class Tile
     {
-        private int directionX;
-        private int directionY;
         private int positionX;
         private int positionY;
-        private List<(int dirX, int dirY)> possibleDirections;
 
-
-
-        /*private Tile previousTile;
-        private int xCoordinate;
-        private int yCoordinate;
-        private TileType nextPossibleTileTypes;
-           
-        public int XCoordinate { get { return xCoordinate; } }
-        public int YCoordinate { get { return yCoordinate; } }
-        public TileType TileType { get; set; }
-        public TileType NextPossibleTileTypes { get { return nextPossibleTileTypes; } }
-        public Tile PreviousTile { get { return previousTile; } }
-
-        public Tile(int xCoordinate, int yCoordinate, Tile previousTile = null, TileType tileType = TileType.Right)
+        public Tile(int positionX, int positionY)
         {
-            TileType = tileType;
-            this.previousTile = previousTile;
-            this.xCoordinate = xCoordinate;
-            this.yCoordinate = yCoordinate;
-            nextPossibleTileTypes = TileType.Left | TileType.Right | TileType.Up | TileType.Down;
+            this.positionX = positionX;
+            this.positionY = positionY;
         }
 
-        public void RemovePossibility(TileType possibility)
-        {
-            if ((int)possibility > (int)TileType.Down || !nextPossibleTileTypes.HasFlag(possibility))
-                return;
-            nextPossibleTileTypes &= ~possibility;
-        }*/
+        public bool Visited { get; set; } = false;
 
-        /*public enum Direction
-        {
-            Left,
-            Right,
-            Up,
-            Down,
-        }
-        private const int width = 50;
-        private const int height = 50;
-        
+        public TileDirection Direction { get; set; } = TileDirection.None;
+        public List<TileDirection> PossibleDirections { get; set; } = new List<TileDirection>() { TileDirection.West, TileDirection.North, TileDirection.East, TileDirection.South };
 
-        private Direction dir;
-        private Rectangle box;
-        private Texture2D tex;
-        public Tile(Direction dir, Rectangle box)
-        {
-            this.dir = dir;
-            this.box = box;
-        }
-        public Point Pos 
-        { 
-            set
-            {
-                box.X = value.X;
-                box.Y = value.Y;
-            } 
-        }
-        public Direction Dir { get { return dir; } }
-        public void Draw(SpriteBatch sb)
-        {
-            sb.Draw(tex, box, Color.White);
-        }*/
+        public int PositionX { get { return positionX; } }
+        public int PositionY { get { return positionY; } }
+
+        public Tile Left  { get; set; } = null;
+        public Tile Right { get; set; } = null;
+        public Tile Above { get; set; } = null;
+        public Tile Below { get; set; } = null;
     }
 }

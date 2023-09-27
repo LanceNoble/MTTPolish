@@ -22,8 +22,6 @@ namespace MTTPolish
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Board _board;
-
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -43,10 +41,10 @@ namespace MTTPolish
             StateManager.PossibleStates.Add(new MenuState());
             StateManager.PossibleStates.Add(new PlayState());
             StateManager.PossibleStates.Add(new PauseState());
-            StateManager.SetCurrentState(GameState.Menu);
+            StateManager.SetCurrentState(GameState.Play);
 
-            
-            _board = new Board();
+            for (int i = 0; i < StateManager.PossibleStates.Count; i++)
+                StateManager.PossibleStates[i].Initialize();
 
             base.Initialize();
         }
