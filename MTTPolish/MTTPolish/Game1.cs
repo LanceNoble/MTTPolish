@@ -73,7 +73,10 @@ namespace MTTPolish
             GraphicsDevice.Clear(Color.ForestGreen);
 
             // TODO: Add your drawing code here
+            _spriteBatch.Begin();
             StateManager.CurrentState.Draw(_spriteBatch);
+            _spriteBatch.End();
+
             base.Draw(gameTime);
         }
     }

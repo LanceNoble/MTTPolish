@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MTTPolish.GameStuff.Enemies;
 using System;
 
 namespace MTTPolish.GameStuff.States
@@ -8,9 +9,11 @@ namespace MTTPolish.GameStuff.States
     internal class PlayState : IState
     {
         Texture2D pathTexture;
+        Texture2D goblinTexture;
 
         Random randomNumberGenerator;
         Board level;
+        Goblin goblin;
         public PlayState()
         {
             randomNumberGenerator = new Random();
@@ -23,26 +26,26 @@ namespace MTTPolish.GameStuff.States
         {
             level.Generate();
             level.Print();
+
+            goblin = new Goblin(level.Path);
         }
 
         public void LoadContent(ContentManager content)
         {
             pathTexture = content.Load<Texture2D>("Tiles/pathTexture");
+            goblinTexture = content.Load<Texture2D>("Enemies/square");
         }
 
         public void Update(GameTime gameTime)
         {
-           
+            goblin.Move();
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //GraphicsDeviceManager.GraphicsDevice.Clear(Color.Blue);
-            spriteBatch.Begin();
             for (int i = 0; i < level.Path.Length; i++) 
                 level.Path[i].Draw(spriteBatch, pathTexture);
-
-            spriteBatch.End();
+            goblin.Draw(spriteBatch, goblinTexture);
         }
     }
 }

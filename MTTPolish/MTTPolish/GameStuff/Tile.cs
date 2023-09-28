@@ -29,11 +29,12 @@ namespace MTTPolish.GameStuff
             this.y = y;
 
             width = 40;
-            height = 40;
+            height = 20;
 
             box = new Rectangle(this.y * width, this.x * height, width, height);
         }
 
+        public Rectangle Box { get { return box; } }
         public bool Visited { get; set; } = false;
 
         public TileDirection Direction { get; set; } = TileDirection.None;

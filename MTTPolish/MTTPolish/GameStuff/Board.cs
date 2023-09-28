@@ -34,7 +34,7 @@ namespace MTTPolish.GameStuff
          * Generates the path
          * 
          * Known Issues:
-         * 1. Larger size = larger chance of the algorithm getting stuck
+         * 1. Larger size = larger chance this method gets stuck
          * 
          * Potential Solutions:
          * 1. More constraints
