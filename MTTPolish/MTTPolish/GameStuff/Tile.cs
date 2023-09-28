@@ -31,7 +31,7 @@ namespace MTTPolish.GameStuff
             width = 40;
             height = 20;
 
-            box = new Rectangle(this.y * width, this.x * height, width, height);
+            box = new Rectangle(this.y * width, this.x * height + 360, width, height); // The 360 is an offset shifting the path downwards more
         }
 
         public Rectangle Box { get { return box; } }

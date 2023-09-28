@@ -3,27 +3,29 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MTTPolish.GameStuff.Enemies
 {
+    /*
+     * Follows a pre-determined path to the player and damages them
+     */
     internal class Goblin
     {
         private int spd; // entity speeds should be multiples of 5
         private int dmg;
-        private int hp;
         private Rectangle box;
-        private Texture2D texture;
         private Tile[] path;
         private int currentPathPosition;
         
-
         public Goblin(Tile[] path)
         {
             currentPathPosition = 0; 
             spd = 2;
-            dmg = 5;
-            hp = 5;
+            dmg = 10;
             this.path = path;
 
             box = new Rectangle(this.path[0].Box.X + this.path[0].Box.Width / 4, this.path[0].Box.Y - this.path[0].Box.Height / 2, this.path[0].Box.Height, this.path[0].Box.Height);
         }
+
+        public Rectangle Box { get { return box; } }
+        public int Health { get; set; } = 100;
 
         public void Hurt()
         {
@@ -34,7 +36,7 @@ namespace MTTPolish.GameStuff.Enemies
          * Moves the Goblin
          * 
          * Known Issues:
-         * 1. If the Goblin's speed is too high, it can bypass tiles and go off course
+         * 1. If the Goblin's speed is too high, it can bypass tiles and go off course (noticeable at 100 spd)
          * 1. Can't move by float values
          * 
          * Potential Solutions:
@@ -85,7 +87,7 @@ namespace MTTPolish.GameStuff.Enemies
 
         public void Draw(SpriteBatch sb, Texture2D texture)
         {
-            sb.Draw(texture, box, Color.White);
+            sb.Draw(texture, box, Color.DarkGreen);
         }
     }
 }

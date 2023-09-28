@@ -2,10 +2,15 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MTTPolish.GameStuff.Enemies;
+using MTTPolish.GameStuff.Towers;
 using System;
+using System.Collections.Generic;
 
 namespace MTTPolish.GameStuff.States
 {
+    /*
+     * To-Do: Put trees at the top portion of the screen
+     */
     internal class PlayState : IState
     {
         Texture2D pathTexture;
@@ -13,10 +18,14 @@ namespace MTTPolish.GameStuff.States
 
         Random randomNumberGenerator;
         Board level;
-        Goblin goblin;
+        List<Goblin> goblins;
+        List<Frank> franks;
+
         public PlayState()
         {
             randomNumberGenerator = new Random();
+            goblins = new List<Goblin>();
+            franks = new List<Frank>();
 
             // For now, best to keep the dimensions the same aspect ratio as the window
             level = new Board(randomNumberGenerator, 18, 32);
@@ -27,7 +36,8 @@ namespace MTTPolish.GameStuff.States
             level.Generate();
             level.Print();
 
-            goblin = new Goblin(level.Path);
+            goblins.Add(new Goblin(level.Path));
+            franks.Add(new Frank(level.Map[8, 7]));
         }
 
         public void LoadContent(ContentManager content)
@@ -38,14 +48,23 @@ namespace MTTPolish.GameStuff.States
 
         public void Update(GameTime gameTime)
         {
-            goblin.Move();
+            for (int i = 0; i < goblins.Count; i++)
+                goblins[i].Move();
+
+            for (int i = 0; i < franks.Count; i++)
+                franks[i].Fire(goblins);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             for (int i = 0; i < level.Path.Length; i++) 
                 level.Path[i].Draw(spriteBatch, pathTexture);
-            goblin.Draw(spriteBatch, goblinTexture);
+
+            for (int i = 0; i < goblins.Count; i++)
+                goblins[i].Draw(spriteBatch, goblinTexture);
+
+            for (int i = 0; i < franks.Count; i++)
+                franks[i].Draw(spriteBatch, goblinTexture);
         }
     }
 }

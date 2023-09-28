@@ -29,6 +29,7 @@ namespace MTTPolish.GameStuff
         }
 
         public Tile[] Path { get { return path; } }
+        public Tile[,] Map { get { return map; } }
 
         /*
          * Generates the path
