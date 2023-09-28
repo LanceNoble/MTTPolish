@@ -6,5 +6,10 @@ This system involves a StateManager class that serves as a singleton responsible
 As for the exact data types this StateManager handles, that would be those who implement the IState interface: an interface that defines the behavior of all GameStates.
 This behavior involves: initializing variables for game logic, updating game logic via those variables, loading the content that will be drawn for that game state, and drawing the loaded content based on what was updated in the game logic.
 
-I remember someone asking me if the map of our game was randomly generated.
-At the time, our game could only load levels via hard-typed text files, but now I'm here to implement some sort of procedural generation for our maps.
+The next thing I wanted to do was add a feature for procedural enemy path generation to add more variability and replayability to the game,
+so I implemented some sort of backtracking via a stack to force the path to follow any input constraints or rules for generation.
+
+The third thing I wanted to do was shift responsibility between classes.
+The Board class in the old file seemed to be responsible for doing basically everything: from moving enemies to handling collisions between them and towers.
+This resulted in the Board class being cluttered with 500 lines of code.
+I managed to reduce it to 100 by delegating enemy movement to enemy classes and delegating enemy elimination to tower classes
