@@ -5,6 +5,7 @@ using MTTPolish.GameStuff.Enemies;
 using MTTPolish.GameStuff.Towers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MTTPolish.GameStuff.States
 {
@@ -13,9 +14,12 @@ namespace MTTPolish.GameStuff.States
      */
     internal class PlayState : IState
     {
-        Texture2D pathTexture;
-        Texture2D goblinTexture;
+        Texture2D lPath;
+        Texture2D tPath;
+        Texture2D straightPath;
+        Texture2D grass;
 
+        Texture2D goblinTexture;
         Random randomNumberGenerator;
         Board level;
         List<Goblin> goblins;
@@ -26,9 +30,7 @@ namespace MTTPolish.GameStuff.States
             randomNumberGenerator = new Random();
             goblins = new List<Goblin>();
             franks = new List<Frank>();
-
-            // For now, best to keep the dimensions the same aspect ratio as the window
-            level = new Board(randomNumberGenerator, 18, 32);
+            level = new Board(randomNumberGenerator, 32, 18, grass, lPath, tPath, straightPath);
         }
 
         public void Initialize()
@@ -37,12 +39,15 @@ namespace MTTPolish.GameStuff.States
             level.Print();
 
             goblins.Add(new Goblin(level.Path));
-            franks.Add(new Frank(level.Map[8, 7]));
+            //franks.Add(new Frank(level.Map[17, 15]));
         }
 
         public void LoadContent(ContentManager content)
         {
-            pathTexture = content.Load<Texture2D>("Tiles/pathTexture");
+            grass = content.Load<Texture2D>("Tiles/grass");
+            lPath = content.Load<Texture2D>("Tiles/lPath");
+            tPath = content.Load<Texture2D>("Tiles/tPath");
+            straightPath = content.Load<Texture2D>("Tiles/straightPath");
             goblinTexture = content.Load<Texture2D>("Enemies/square");
         }
 
@@ -53,12 +58,12 @@ namespace MTTPolish.GameStuff.States
 
             for (int i = 0; i < franks.Count; i++)
                 franks[i].Fire(goblins);
+
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            for (int i = 0; i < level.Path.Length; i++) 
-                level.Path[i].Draw(spriteBatch, pathTexture);
+            level.Draw(spriteBatch, lPath, tPath, straightPath, grass);
 
             for (int i = 0; i < goblins.Count; i++)
                 goblins[i].Draw(spriteBatch, goblinTexture);

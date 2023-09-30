@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -11,25 +13,35 @@ namespace MTTPolish.GameStuff
     {
         private Random randomNumberGenerator; // Puts the 'random' in random path
 
-        private Tile[,] map; // Board layout showing what is on each and every single tile at all times
+        private Tile[] map; // Board layout showing what is on each and every single tile at all times
         private Tile[] path; // Path that the enemy will follow
 
-        // Board dimensions
+        /*
+         * Board dimensions
+         * Something important to note: sizeX actually determines the Y dimension of the array and vice versa.
+         */
         private int sizeX;
         private int sizeY;
 
-        public Board(Random randomNumberGenerator, int sizeX, int sizeY)
+        Texture2D grass;
+        Texture2D lPath;
+        Texture2D tPath;
+        Texture2D straightPath;
+
+        public Board(Random randomNumberGenerator, int sizeX, int sizeY, Texture2D grass, Texture2D lPath, Texture2D tPath, Texture2D straightPath)
         {
             this.randomNumberGenerator = randomNumberGenerator;
-
             this.sizeX = sizeX;
             this.sizeY = sizeY;
-
-            map = new Tile[this.sizeX, this.sizeY];
+            map = new Tile[this.sizeX * this.sizeY];
+            this.grass = grass;
+            this.lPath = lPath;
+            this.tPath = tPath;
+            this.straightPath = straightPath;
         }
 
         public Tile[] Path { get { return path; } }
-        public Tile[,] Map { get { return map; } }
+        public Tile[] Map { get { return map; } }
 
         /*
          * Generates the path
@@ -47,16 +59,17 @@ namespace MTTPolish.GameStuff
          */
         public void Generate()
         {
-            for (int x = 0; x < sizeX; x++)
+            for (int i = 0; i < sizeX * sizeY; i++)
             {
-                for (int y = 0; y < sizeY; y++)
-                    map[x, y] = new Tile(x, y);
+                map[i] = new Tile(i % sizeX, i / sizeX);
+                map[i].Layers.Add(grass);
             }
 
             Stack<Tile> path = new Stack<Tile>();
-            Tile lastTile = map[randomNumberGenerator.Next(1, sizeX - 1), 0];
+            Tile lastTile = map[sizeX * randomNumberGenerator.Next(1, sizeY - 2)];
             lastTile.PossibleDirections = new List<TileDirection>() { TileDirection.East };
             lastTile.Direction = TileDirection.East;
+            lastTile.Layers.Add(straightPath);
 
             while (true) // I put the condition `lastTile.Y + 1 != sizeY` inside the loop, so it gets checked before the potentially program crashing conditional occurs
             {
@@ -81,37 +94,41 @@ namespace MTTPolish.GameStuff
                 
                 if (path.Peek().Direction == TileDirection.East)
                 {
-                    lastTile = map[path.Peek().X, path.Peek().Y + 1];
+                    //lastTile = map[path.Peek().X, path.Peek().Y + 1];
+                    lastTile = map[(path.Peek().X + 1) + (sizeX * path.Peek().Y)];
                     lastTile.PossibleDirections = new List<TileDirection>() { TileDirection.North, TileDirection.East, TileDirection.South };
                 } 
                 else if (path.Peek().Direction == TileDirection.West)
                 {
-                    lastTile = map[path.Peek().X, path.Peek().Y - 1];
+                    //lastTile = map[path.Peek().X, path.Peek().Y - 1];
+                    lastTile = map[(path.Peek().X - 1) + (sizeX * path.Peek().Y)];
                     lastTile.PossibleDirections = new List<TileDirection>() { TileDirection.North, TileDirection.West, TileDirection.South };
                 }  
                 else if (path.Peek().Direction == TileDirection.South)
                 {
-                    lastTile = map[path.Peek().X + 1, path.Peek().Y];
+                    //lastTile = map[path.Peek().X + 1, path.Peek().Y];
+                    lastTile = map[path.Peek().X + (sizeX * (path.Peek().Y + 1))];
                     lastTile.PossibleDirections = new List<TileDirection>() { TileDirection.West, TileDirection.South, TileDirection.East };
                 } 
                 else if (path.Peek().Direction == TileDirection.North)
                 {
-                    lastTile = map[path.Peek().X - 1, path.Peek().Y];
+                    //lastTile = map[path.Peek().X - 1, path.Peek().Y];
+                    lastTile = map[path.Peek().X + (sizeX * (path.Peek().Y - 1))];
                     lastTile.PossibleDirections = new List<TileDirection>() { TileDirection.West, TileDirection.North, TileDirection.East };
                 }
 
-                if (lastTile.Y + 1 == sizeY)
+                if (lastTile.X + 1 == sizeX)
                 {
                     path.Push(lastTile);
                     lastTile.Direction = TileDirection.East;
                     break;
                 }
 
-                if (lastTile.Y - 1 == -1 || lastTile.X - 1 == -1 || lastTile.X + 1 == sizeX || 
-                    (map[lastTile.X, lastTile.Y - 1] != path.Peek() && map[lastTile.X, lastTile.Y - 1].Direction != TileDirection.None) || 
-                    (map[lastTile.X, lastTile.Y + 1] != path.Peek() && map[lastTile.X, lastTile.Y + 1].Direction != TileDirection.None) || 
-                    (map[lastTile.X - 1, lastTile.Y] != path.Peek() && map[lastTile.X - 1, lastTile.Y].Direction != TileDirection.None) || 
-                    (map[lastTile.X + 1, lastTile.Y] != path.Peek() && map[lastTile.X + 1, lastTile.Y].Direction != TileDirection.None)) 
+                if (lastTile.Y - 1 == -1 || lastTile.X - 1 == -1 || lastTile.Y + 1 == sizeY || 
+                    (map[(lastTile.X - 1) + (sizeX * lastTile.Y)] != path.Peek() && map[(lastTile.X - 1) + (sizeX * lastTile.Y)].Direction != TileDirection.None) || 
+                    (map[(lastTile.X + 1) + (sizeX * lastTile.Y)] != path.Peek() && map[(lastTile.X + 1) + (sizeX * lastTile.Y)].Direction != TileDirection.None) || 
+                    (map[lastTile.X + (sizeX * (lastTile.Y - 1))] != path.Peek() && map[lastTile.X + (sizeX * (lastTile.Y - 1))].Direction != TileDirection.None) || 
+                    (map[lastTile.X + (sizeX * (lastTile.Y + 1))] != path.Peek() && map[lastTile.X + (sizeX * (lastTile.Y + 1))].Direction != TileDirection.None)) 
                 {
                     lastTile = path.Pop();
                     lastTile.PossibleDirections.Remove(lastTile.Direction);
@@ -128,15 +145,29 @@ namespace MTTPolish.GameStuff
                 this.path[i] = path.Pop();
         }
 
-        public void Print()
+        public void Draw(SpriteBatch spriteBatch, Texture2D lPath, Texture2D tPath, Texture2D straightPath, Texture2D grass)
         {
             for (int i = 0; i < sizeX; i++)
             {
-                for (int j = 0; j < sizeY; j++)
-                    Debug.Write((char)map[i, j].Direction);
-                Debug.Write('\n');
+               for (int j = 0; j < sizeY; j++)
+               {
+                    //for ()
+                    //{
+                    //
+                    //}
+               }
+                    //spriteBatch.Draw(grass, map[i, j].Box, null, Color.White, (float)(randomNumberGenerator.Next(0, 4) * (Math.PI / 2)), new Vector2(map[i, j].Box.Width / 2, map[i, j].Box.Height / 2), SpriteEffects.None, 0);
             }
-            Debug.Write('\n');
+        }
+
+        public void Print()
+        {
+            for (int i = 0; i < sizeX * sizeY; i++)
+            {
+                if (i % sizeX == 0)
+                    Debug.Write('\n');
+                Debug.Write((char)map[i].Direction);  
+            }
         }
     }
 }
