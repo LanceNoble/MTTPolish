@@ -41,6 +41,7 @@ namespace MTTPolish
             StateManager.PossibleStates.Add(new MenuState());
             StateManager.PossibleStates.Add(new PlayState());
             StateManager.PossibleStates.Add(new PauseState());
+
             StateManager.SetCurrentState(GameState.Play);
 
             for (int i = 0; i < StateManager.PossibleStates.Count; i++)
@@ -65,6 +66,7 @@ namespace MTTPolish
 
             // TODO: Add your update logic here
             StateManager.CurrentState.Update(gameTime);
+
             base.Update(gameTime);
         }
 

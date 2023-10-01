@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace MTTPolish.GameStuff
@@ -18,18 +17,15 @@ namespace MTTPolish.GameStuff
         private int x;
         private int y;
         private Rectangle box;
-        private List<Texture2D> layers;
 
         public Tile(int x, int y)
         {
             this.x = x;
             this.y = y;
             int dimensions = 40;
-            box = new Rectangle(this.y * dimensions, this.x * dimensions, dimensions, dimensions);
-            layers = new List<Texture2D>();
+            box = new Rectangle(this.x * dimensions, this.y * dimensions, dimensions, dimensions);
         }
 
-        public List<Texture2D> Layers { get { return layers; } }
         public Rectangle Box { get { return box; } }
         public bool Visited { get; set; } = false;
         public TileDirection Direction { get; set; } = TileDirection.None;

@@ -5,7 +5,6 @@ using MTTPolish.GameStuff.Enemies;
 using MTTPolish.GameStuff.Towers;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace MTTPolish.GameStuff.States
 {
@@ -30,15 +29,16 @@ namespace MTTPolish.GameStuff.States
             randomNumberGenerator = new Random();
             goblins = new List<Goblin>();
             franks = new List<Frank>();
-            level = new Board(randomNumberGenerator, 32, 18, grass, lPath, tPath, straightPath);
+            level = new Board(randomNumberGenerator, 32, 18);
         }
 
         public void Initialize()
         {
+            //level = new Board(randomNumberGenerator, 32, 18, grass, lPath, tPath, straightPath);
             level.Generate();
             level.Print();
 
-            goblins.Add(new Goblin(level.Path));
+            //goblins.Add(new Goblin(level.Path));
             //franks.Add(new Frank(level.Map[17, 15]));
         }
 
@@ -49,6 +49,7 @@ namespace MTTPolish.GameStuff.States
             tPath = content.Load<Texture2D>("Tiles/tPath");
             straightPath = content.Load<Texture2D>("Tiles/straightPath");
             goblinTexture = content.Load<Texture2D>("Enemies/square");
+            
         }
 
         public void Update(GameTime gameTime)
@@ -63,7 +64,7 @@ namespace MTTPolish.GameStuff.States
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            level.Draw(spriteBatch, lPath, tPath, straightPath, grass);
+            level.Draw(spriteBatch, grass, lPath, tPath, straightPath);
 
             for (int i = 0; i < goblins.Count; i++)
                 goblins[i].Draw(spriteBatch, goblinTexture);

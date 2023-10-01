@@ -11,33 +11,30 @@ namespace MTTPolish.GameStuff
      */
     internal class Board
     {
-        private Random randomNumberGenerator; // Puts the 'random' in random path
+        private Random rng; // Puts the 'random' in random path
+        private Tile[] map, path; // Board layout showing what is on each and every single tile at all times
+        private float[] grassRotations;
+        private SpriteEffects[] grassFlips;
+        private SpriteEffects[] flipOptions;
+        private int sizeX, sizeY; // Board dimensions
 
-        private Tile[] map; // Board layout showing what is on each and every single tile at all times
-        private Tile[] path; // Path that the enemy will follow
-
-        /*
-         * Board dimensions
-         * Something important to note: sizeX actually determines the Y dimension of the array and vice versa.
-         */
-        private int sizeX;
-        private int sizeY;
-
-        Texture2D grass;
-        Texture2D lPath;
-        Texture2D tPath;
-        Texture2D straightPath;
-
-        public Board(Random randomNumberGenerator, int sizeX, int sizeY, Texture2D grass, Texture2D lPath, Texture2D tPath, Texture2D straightPath)
+        public Board(Random rng, int sizeX, int sizeY)
         {
-            this.randomNumberGenerator = randomNumberGenerator;
+            this.rng = rng;
             this.sizeX = sizeX;
             this.sizeY = sizeY;
+
             map = new Tile[this.sizeX * this.sizeY];
-            this.grass = grass;
-            this.lPath = lPath;
-            this.tPath = tPath;
-            this.straightPath = straightPath;
+
+            grassRotations = new float[this.sizeX * this.sizeY];
+            for (int i = 0; i < grassRotations.Length; i++)
+                grassRotations[i] = rng.Next(0, 4) * (float)(Math.PI / 2);
+
+            flipOptions = new SpriteEffects[3] { SpriteEffects.None, SpriteEffects.FlipVertically, SpriteEffects.FlipHorizontally};
+
+            grassFlips = new SpriteEffects[this.sizeX * this.sizeY];
+            for (int i = 0; i < grassFlips.Length; i++)
+                grassFlips[i] = flipOptions[rng.Next(0, flipOptions.Length)];
         }
 
         public Tile[] Path { get { return path; } }
@@ -60,16 +57,12 @@ namespace MTTPolish.GameStuff
         public void Generate()
         {
             for (int i = 0; i < sizeX * sizeY; i++)
-            {
                 map[i] = new Tile(i % sizeX, i / sizeX);
-                map[i].Layers.Add(grass);
-            }
 
             Stack<Tile> path = new Stack<Tile>();
-            Tile lastTile = map[sizeX * randomNumberGenerator.Next(1, sizeY - 2)];
+            Tile lastTile = map[sizeX * rng.Next(1, sizeY - 2)];
             lastTile.PossibleDirections = new List<TileDirection>() { TileDirection.East };
             lastTile.Direction = TileDirection.East;
-            lastTile.Layers.Add(straightPath);
 
             while (true) // I put the condition `lastTile.Y + 1 != sizeY` inside the loop, so it gets checked before the potentially program crashing conditional occurs
             {
@@ -83,7 +76,7 @@ namespace MTTPolish.GameStuff
                 else if (lastTile.Visited && lastTile.PossibleDirections.Count > 0)
                 {
                     path.Push(lastTile);
-                    lastTile.Direction = lastTile.PossibleDirections[randomNumberGenerator.Next(0, lastTile.PossibleDirections.Count)];
+                    lastTile.Direction = lastTile.PossibleDirections[rng.Next(0, lastTile.PossibleDirections.Count)];
                 }
 
                 if (!lastTile.Visited)
@@ -94,25 +87,21 @@ namespace MTTPolish.GameStuff
                 
                 if (path.Peek().Direction == TileDirection.East)
                 {
-                    //lastTile = map[path.Peek().X, path.Peek().Y + 1];
                     lastTile = map[(path.Peek().X + 1) + (sizeX * path.Peek().Y)];
                     lastTile.PossibleDirections = new List<TileDirection>() { TileDirection.North, TileDirection.East, TileDirection.South };
                 } 
                 else if (path.Peek().Direction == TileDirection.West)
                 {
-                    //lastTile = map[path.Peek().X, path.Peek().Y - 1];
                     lastTile = map[(path.Peek().X - 1) + (sizeX * path.Peek().Y)];
                     lastTile.PossibleDirections = new List<TileDirection>() { TileDirection.North, TileDirection.West, TileDirection.South };
                 }  
                 else if (path.Peek().Direction == TileDirection.South)
                 {
-                    //lastTile = map[path.Peek().X + 1, path.Peek().Y];
                     lastTile = map[path.Peek().X + (sizeX * (path.Peek().Y + 1))];
                     lastTile.PossibleDirections = new List<TileDirection>() { TileDirection.West, TileDirection.South, TileDirection.East };
                 } 
                 else if (path.Peek().Direction == TileDirection.North)
                 {
-                    //lastTile = map[path.Peek().X - 1, path.Peek().Y];
                     lastTile = map[path.Peek().X + (sizeX * (path.Peek().Y - 1))];
                     lastTile.PossibleDirections = new List<TileDirection>() { TileDirection.West, TileDirection.North, TileDirection.East };
                 }
@@ -135,7 +124,7 @@ namespace MTTPolish.GameStuff
                     continue;
                 }
 
-                lastTile.Direction = lastTile.PossibleDirections[randomNumberGenerator.Next(0, lastTile.PossibleDirections.Count)];
+                lastTile.Direction = lastTile.PossibleDirections[rng.Next(0, lastTile.PossibleDirections.Count)];
             }
 
             this.path = new Tile[path.Count];
@@ -145,18 +134,27 @@ namespace MTTPolish.GameStuff
                 this.path[i] = path.Pop();
         }
 
-        public void Draw(SpriteBatch spriteBatch, Texture2D lPath, Texture2D tPath, Texture2D straightPath, Texture2D grass)
+        public void Draw(SpriteBatch spriteBatch, Texture2D grassPath, Texture2D lPath, Texture2D tPath, Texture2D straightPath)
         {
-            for (int i = 0; i < sizeX; i++)
+            // Draw grass layer
+            for (int i = 0; i < sizeX * sizeY; i++)
             {
-               for (int j = 0; j < sizeY; j++)
-               {
-                    //for ()
-                    //{
-                    //
-                    //}
-               }
-                    //spriteBatch.Draw(grass, map[i, j].Box, null, Color.White, (float)(randomNumberGenerator.Next(0, 4) * (Math.PI / 2)), new Vector2(map[i, j].Box.Width / 2, map[i, j].Box.Height / 2), SpriteEffects.None, 0);
+                Rectangle offset = map[i].Box;
+                offset.X += offset.Width / 2;
+                offset.Y += offset.Height / 2;
+
+                /*
+                 * Note: The Vector2 origin parameter refers to the TEXTURE's local origin, not the destination rectangle's local origin.
+                 * The destination rectangle's position offset (which is a result of the Vector2 origin parameter) then scales with your TEXTURE's local origin offset.
+                 * In other words, the destination rectangle's offset is proportional to the TEXTURE's local origin offset
+                 */
+                spriteBatch.Draw(grassPath, offset, null, Color.White, grassRotations[i], new Vector2(grassPath.Width / 2, grassPath.Height / 2), grassFlips[i], 0);
+            }
+
+            // Draw path
+            for (int i = 0; i < path.Length; i++)
+            {
+               
             }
         }
 
