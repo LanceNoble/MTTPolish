@@ -29,6 +29,8 @@ namespace MTTPolish.GameStuff.States
             randomNumberGenerator = new Random();
             goblins = new List<Goblin>();
             franks = new List<Frank>();
+            //level = new Board(randomNumberGenerator, 200, 200);
+            //level = new Board(randomNumberGenerator, 16, 9);
             level = new Board(randomNumberGenerator, 32, 18);
         }
 
@@ -49,7 +51,6 @@ namespace MTTPolish.GameStuff.States
             tPath = content.Load<Texture2D>("Tiles/tPath");
             straightPath = content.Load<Texture2D>("Tiles/straightPath");
             goblinTexture = content.Load<Texture2D>("Enemies/square");
-            
         }
 
         public void Update(GameTime gameTime)
@@ -59,7 +60,6 @@ namespace MTTPolish.GameStuff.States
 
             for (int i = 0; i < franks.Count; i++)
                 franks[i].Fire(goblins);
-
         }
 
         public void Draw(SpriteBatch spriteBatch)
