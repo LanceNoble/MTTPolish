@@ -43,36 +43,10 @@ namespace MTTPolish.GameStuff.Enemies
          */
         public void Move()
         {
-            /*if (!box.Intersects(path[0].Box))
-            {
-                box.X += spd;
-                return;
-            }
-            else
-                currentPathPosition = 0;*/
-        
             if (currentPathPosition == path.Length)
                 return;
 
-            box.Offset(path[currentPathPosition].CurrentDirection);
-            //box += path[currentPathPosition].CurrentDirection;
-            //switch (path[currentPathPosition].DirectionVectors)
-            //{
-            //    case TileDirection.West:
-            //        box.X -= spd;
-            //        break;
-            //    case TileDirection.North:
-            //        box.Y -= spd / 2;
-            //        break;
-            //    case TileDirection.East:
-            //        box.X += spd;
-            //        break;
-            //    case TileDirection.South:
-            //        box.Y += spd / 2;
-            //        break;
-            //    default:
-            //        break;
-            //}
+            box.Offset(path[currentPathPosition].Direction);
         
             /*
              * This complex conditional enables the player to view enemy movement at an angle rather than a bird's eye view
@@ -80,10 +54,10 @@ namespace MTTPolish.GameStuff.Enemies
              * this conditional: `!path[currentPathPosition].Box.Intersects(box)`
              */
             if (currentPathPosition + 1 < path.Length && 
-                ((box.Center.X >= path[currentPathPosition + 1].Box.Center.X && path[currentPathPosition].CurrentDirection == Vector2.UnitX) ||
-                (box.Center.X <= path[currentPathPosition + 1].Box.Center.X && path[currentPathPosition].CurrentDirection == -Vector2.UnitX) ||
-                (box.Bottom >= path[currentPathPosition + 1].Box.Center.Y && path[currentPathPosition].CurrentDirection == Vector2.UnitY) ||
-                (box.Bottom <= path[currentPathPosition + 1].Box.Center.Y && path[currentPathPosition].CurrentDirection == -Vector2.UnitY)))
+                ((box.Center.X >= path[currentPathPosition + 1].Box.Center.X && path[currentPathPosition].Direction == Vector2.UnitX) ||
+                (box.Center.X <= path[currentPathPosition + 1].Box.Center.X && path[currentPathPosition].Direction == -Vector2.UnitX) ||
+                (box.Bottom >= path[currentPathPosition + 1].Box.Center.Y && path[currentPathPosition].Direction == Vector2.UnitY) ||
+                (box.Bottom <= path[currentPathPosition + 1].Box.Center.Y && path[currentPathPosition].Direction == -Vector2.UnitY)))
                 currentPathPosition++;
         }
 

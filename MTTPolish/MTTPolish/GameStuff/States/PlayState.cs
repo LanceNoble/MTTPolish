@@ -13,25 +13,32 @@ namespace MTTPolish.GameStuff.States
      */
     internal class PlayState : IState
     {
-        Texture2D lPath;
-        Texture2D tPath;
-        Texture2D straightPath;
-        Texture2D grass;
+        // Player
+        private int hp;
+        private int gold;
 
-        Texture2D goblinTexture;
-        Random randomNumberGenerator;
-        Board level;
-        List<Goblin> goblins;
-        List<Frank> franks;
+        private Texture2D lPath;
+        private Texture2D tPath;
+        private Texture2D straightPath;
+        private Texture2D grass;
+        private Texture2D goblinTexture;
+
+        private Random randomNumberGenerator;
+        private Board level;
+        private List<Goblin> goblins;
+        private List<Mage> franks;
 
         public PlayState()
         {
+            hp = 3;
+            gold = 0;
+
             randomNumberGenerator = new Random();
             goblins = new List<Goblin>();
-            franks = new List<Frank>();
+            franks = new List<Mage>();
             //level = new Board(randomNumberGenerator, 200, 200);
-            //level = new Board(randomNumberGenerator, 16, 9);
-            level = new Board(randomNumberGenerator, 32, 18);
+            level = new Board(randomNumberGenerator, 16, 9);
+            //level = new Board(randomNumberGenerator, 32, 18);
         }
 
         public void Initialize()
@@ -50,7 +57,7 @@ namespace MTTPolish.GameStuff.States
             lPath = content.Load<Texture2D>("Tiles/lPath");
             tPath = content.Load<Texture2D>("Tiles/tPath");
             straightPath = content.Load<Texture2D>("Tiles/straightPath");
-            goblinTexture = content.Load<Texture2D>("Enemies/square");
+            goblinTexture = content.Load<Texture2D>("temp/square");
         }
 
         public void Update(GameTime gameTime)
