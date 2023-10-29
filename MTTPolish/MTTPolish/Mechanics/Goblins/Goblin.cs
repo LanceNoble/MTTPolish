@@ -13,6 +13,8 @@ namespace MTTPolish.GameStuff.Enemies
         private Rectangle box;
         private Tile[] path;
         private int currentPathPosition;
+
+        private Vector2 position;
         
         public Goblin(Tile[] path)
         {
@@ -26,6 +28,7 @@ namespace MTTPolish.GameStuff.Enemies
 
         public Rectangle Box { get { return box; } }
         public int Health { get; set; } = 100;
+        public Vector2 Position { get { return position; } }
 
         public void Hurt()
         {

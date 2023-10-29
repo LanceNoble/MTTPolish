@@ -66,7 +66,7 @@ namespace MTTPolish.GameStuff.States
                 goblins[i].Move();
 
             for (int i = 0; i < franks.Count; i++)
-                franks[i].Fire(goblins);
+                franks[i].Seek(goblins);
         }
 
         public void Draw(SpriteBatch spriteBatch)
