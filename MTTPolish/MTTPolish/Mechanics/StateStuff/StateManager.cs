@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using MTTPolish.GameStuff.States;
 
-namespace MTTPolish.GameStuff
+namespace MTTPolish.Mechanics.StateStuff
 {
     internal static class StateManager
     {

@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MTTPolish.GameStuff.States
+namespace MTTPolish.Mechanics.StateStuff
 {
     internal interface IState
     {

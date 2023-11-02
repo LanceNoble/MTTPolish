@@ -1,11 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using MTTPolish.GameStuff.Enemies;
 using System;
 using System.Timers;
+using MTTPolish.Mechanics.Goblins;
 
-namespace MTTPolish.GameStuff.Towers
+namespace MTTPolish.Mechanics.Mages
 {
     /*
      * Protects the player from goblins
@@ -13,22 +13,34 @@ namespace MTTPolish.GameStuff.Towers
     internal class Mage
     {
         private Rectangle box;
-        private Rectangle bulletBox;
         private Texture2D texture;
+        private Vector2 magePosition;
+
+        private Rectangle bulletBox;
+        private Vector2 bulletDirection;
+        private Vector2 bulletPosition;
         private Texture2D bulletTexture;
-        
+        private Timer bulletTime;
+        private bool bulletActive;
+        private float bulletSpeed;
+
         private int range;
         private int damage;
-        private float speed;
 
         private bool canFire;
         private Timer fireRate;
 
-        private double closestGoblinDistance;
-        private Vector2 closestGoblinPosition;
-
         public Mage(Tile tile)
         {
+            bulletActive = false;
+
+            bulletTime = new Timer(2000);
+            bulletTime.AutoReset = false;
+            bulletTime.Elapsed += (x, y) =>
+            {
+                bulletActive = false;
+            };
+
             fireRate = new Timer(1000);
             fireRate.AutoReset = false;
             fireRate.Elapsed += (x, y) =>
@@ -40,17 +52,16 @@ namespace MTTPolish.GameStuff.Towers
             damage = 1;
 
             box = new Rectangle(tile.Box.X + tile.Box.Width / 4, tile.Box.Y - tile.Box.Height / 2, tile.Box.Height, tile.Box.Height);
-            
         }
 
-        public void Seek(List<Goblin> goblins)
+        public Vector2 Seek(List<Goblin> goblins)
         {
-            if (!canFire) 
-                return;
+            if (!canFire)
+                return -Vector2.One;
 
-            closestGoblinPosition = goblins[0].Position;
+            Vector2 closestGoblinPosition = goblins[0].Position;
 
-            closestGoblinDistance = int.MaxValue;
+            double closestGoblinDistance = double.MaxValue;
             double currentGoblinDistance;
             float currentGoblinXDistance;
             float currentGoblinYDistance;
@@ -66,23 +77,32 @@ namespace MTTPolish.GameStuff.Towers
                     closestGoblinDistance = currentGoblinDistance;
                     closestGoblinPosition = goblins[i].Position;
                 }
-                /*
-                if (distance < range)
-                    goblins[i].Health -= damage;
-
-                if (goblins[i].Health <= 0)
-                    goblins.Remove(goblins[i]);
-                */
             }
+
+            if (closestGoblinDistance > range)
+                return -Vector2.One;
+
+            bulletDirection = Vector2.Normalize(closestGoblinPosition - magePosition);
+
+            bulletActive = true;
+            bulletTime.Start();
 
             canFire = false;
             fireRate.Start();
+
+            return closestGoblinPosition;
         }
 
         public void Fire()
         {
-            if (closestGoblinDistance > range)
+            if (!bulletActive)
                 return;
+
+
+
+            // if bullet hits target, make it disappear
+
+            // 
 
             if (canFire)
             {

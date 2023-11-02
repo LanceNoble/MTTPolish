@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MTTPolish.GameStuff;
-using MTTPolish.GameStuff.States;
+using MTTPolish.Mechanics.StateStuff;
+using MTTPolish.Mechanics.StateStuff.States;
 
 namespace MTTPolish
 {

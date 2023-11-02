@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Mechanics\Goblins\Derived\" />
+    <Folder Include="Mechanics\Projectiles\Derived\" />
     <Folder Include="Mechanics\Spells\" />
     <Folder Include="Mechanics\Mages\Derived\" />
   </ItemGroup>

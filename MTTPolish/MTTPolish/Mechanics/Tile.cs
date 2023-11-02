@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MTTPolish.GameStuff
+namespace MTTPolish.Mechanics
 {
     /*
      * Represents an object that has its own bounding box with a unique position

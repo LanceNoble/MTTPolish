@@ -1,8 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MTTPolish.Mechanics.StateStuff;
 
-namespace MTTPolish.GameStuff.States
+namespace MTTPolish.Mechanics.StateStuff.States
 {
     internal class MenuState : IState
     {

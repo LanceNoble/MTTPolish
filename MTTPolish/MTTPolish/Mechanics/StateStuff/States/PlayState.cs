@@ -1,12 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using MTTPolish.GameStuff.Enemies;
-using MTTPolish.GameStuff.Towers;
+using MTTPolish.Mechanics.Goblins;
+using MTTPolish.Mechanics.Mages;
+using MTTPolish.Mechanics.StateStuff;
 using System;
 using System.Collections.Generic;
 
-namespace MTTPolish.GameStuff.States
+namespace MTTPolish.Mechanics.StateStuff.States
 {
     /*
      * To-Do: Put trees at the top portion of the screen

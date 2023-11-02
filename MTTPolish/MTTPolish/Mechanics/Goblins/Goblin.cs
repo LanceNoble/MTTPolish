@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MTTPolish.GameStuff.Enemies
+namespace MTTPolish.Mechanics.Goblins
 {
     /*
      * Follows a pre-determined path to the player and damages them
@@ -15,10 +15,10 @@ namespace MTTPolish.GameStuff.Enemies
         private int currentPathPosition;
 
         private Vector2 position;
-        
+
         public Goblin(Tile[] path)
         {
-            currentPathPosition = 0; 
+            currentPathPosition = 0;
             spd = 2;
             dmg = 10;
             this.path = path;
@@ -50,17 +50,17 @@ namespace MTTPolish.GameStuff.Enemies
                 return;
 
             box.Offset(path[currentPathPosition].Direction);
-        
+
             /*
              * This complex conditional enables the player to view enemy movement at an angle rather than a bird's eye view
              * If you want the enemies to fit inside the tiles while moving instead of their position being offset, use
              * this conditional: `!path[currentPathPosition].Box.Intersects(box)`
              */
-            if (currentPathPosition + 1 < path.Length && 
-                ((box.Center.X >= path[currentPathPosition + 1].Box.Center.X && path[currentPathPosition].Direction == Vector2.UnitX) ||
-                (box.Center.X <= path[currentPathPosition + 1].Box.Center.X && path[currentPathPosition].Direction == -Vector2.UnitX) ||
-                (box.Bottom >= path[currentPathPosition + 1].Box.Center.Y && path[currentPathPosition].Direction == Vector2.UnitY) ||
-                (box.Bottom <= path[currentPathPosition + 1].Box.Center.Y && path[currentPathPosition].Direction == -Vector2.UnitY)))
+            if (currentPathPosition + 1 < path.Length &&
+                (box.Center.X >= path[currentPathPosition + 1].Box.Center.X && path[currentPathPosition].Direction == Vector2.UnitX ||
+                box.Center.X <= path[currentPathPosition + 1].Box.Center.X && path[currentPathPosition].Direction == -Vector2.UnitX ||
+                box.Bottom >= path[currentPathPosition + 1].Box.Center.Y && path[currentPathPosition].Direction == Vector2.UnitY ||
+                box.Bottom <= path[currentPathPosition + 1].Box.Center.Y && path[currentPathPosition].Direction == -Vector2.UnitY))
                 currentPathPosition++;
         }
 
