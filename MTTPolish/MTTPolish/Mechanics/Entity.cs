@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MTTPolish.Mechanics
 {
@@ -15,14 +11,14 @@ namespace MTTPolish.Mechanics
     {
         private Vector2 pos;
         private Vector2 dir;
-        private double spd;
+        private float spd;
         private double width;
         private double height;
         private double rad;
         private int dmg;
         private int hp;
 
-        public Entity(Vector2 pos, Vector2 dir, double spd, double width, double height, double rad, int dmg, int hp) 
+        public Entity(Vector2 pos, Vector2 dir, float spd, double width, double height, double rad, int dmg, int hp) 
         {
             this.pos = pos;
             this.dir = dir;
@@ -34,18 +30,39 @@ namespace MTTPolish.Mechanics
             this.hp = hp;
         }
 
-        public void Move()
+        public void Teleport(float x, float y)
         {
-
+            pos.X = x; 
+            pos.Y = y;
         }
 
-        public void Rotate()
+        public void Move()
         {
+            pos += dir * spd;
+        }
 
+        public void Orient(double rad)
+        {
+            dir.X = dir.X * (float)Math.Cos(rad) - dir.Y * (float)Math.Sin(rad);
+            dir.Y = dir.X * (float)Math.Sin(rad) - dir.Y * (float)Math.Cos(rad);
+        }
+
+        public void Rotate(double rad)
+        {
+            dir.X += dir.X * (float)Math.Cos(rad) - dir.Y * (float)Math.Sin(rad);
+            dir.Y += dir.X * (float)Math.Sin(rad) - dir.Y * (float)Math.Cos(rad);
+        }
+
+        public void Hurt(Entity ent)
+        {
+            ent.hp -= dmg;
         }
 
         public bool Intersects(Entity ent)
         {
+            if (pos.X >= ent.pos.X)
+                return true;
+
             return false;
         }
 
